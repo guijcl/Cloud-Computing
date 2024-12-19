@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+enum ChartTypes {
+	Top200 = 0;
+	Viral50 = 1;
+	BOTH = 2;
+}
+
+message ArtistResponse {
+	string artist_id = 1;
+	string name = 2;
+}
+
+message ArtistListResponse {
+	repeated ArtistResponse artists = 1;
+}
+
+message MusicResponses {
+	string music_id = 1;
+	ChartTypes type = 2;
+	string name = 3;
+	int32 streams = 4;
+}
+
+message MusicListResponses {
+	repeated MusicResponses musics = 1;
+}
+
+message GetArtistMusicRequest{
+	string name = 1; 
+}
+
+message GetArtistWithLetterRequest{
+	string string_char =1;
+}
+
+message GetTop20ArtistRequest{
+	string date = 1;
+}
+
+message GetViral10ArtistRequest {
+	string date = 1;
+}
+
+service Artist {
+	rpc GetArtistMusic (GetArtistMusicRequest) returns (MusicListResponses);
+	rpc GetArtistWithLetter (GetArtistWithLetterRequest) returns (ArtistListResponse);
+	rpc GetTop20Artist (GetTop20ArtistRequest) returns (ArtistListResponse);
+	rpc GetViral10Artist (GetViral10ArtistRequest) returns (ArtistListResponse);
+}
+

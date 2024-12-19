@@ -1,0 +1,30 @@
+steps:
+  - id: 'build musics'
+    name: 'gcr.io/cloud-builders/docker'
+    args: [
+        'build',
+        '--tag=musics', # use local registry for compatibility with local builds
+        '--tag=gcr.io/$PROJECT_ID/musics',
+        '--cache-from=gcr.io/$PROJECT_ID/musics:latest',
+        'app/protobufs/musics/.',
+    ]
+    waitFor: ['-']
+  ## compose
+  - id: 'compose up'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/bash'
+    args:
+      - '-c'
+      - |
+        docker-compose up -d --force-recreate --build
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+    waitFor: ['build musics']
+  ## unit tests
+  - id: 'test musics'
+    name: python
+    args: ['python3', './app/protobufs/musics/musicsTest.py']
+    env:
+      - 'MUSICS_HOST=musics'
+      - 'PROJECT_ID=$PROJECT_ID'
+    waitFor: ['compose up']

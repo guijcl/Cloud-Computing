@@ -1,0 +1,24 @@
+scrape_configs:
+    - job_name: 'prometheus'
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['localhost:9090']
+
+    - job_name: account
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['34.116.253.35:51052']
+
+    - job_name: music
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['34.118.24.157:51051'] 
+
+    - job_name: artist
+      scrape_interval: 5s
+      static_configs:
+        - targets: ['34.118.115.123:51055'] 
+
+
+
+

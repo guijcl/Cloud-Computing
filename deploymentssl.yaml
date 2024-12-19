@@ -1,0 +1,302 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "artist"
+  labels:
+    app: "artist"
+spec:
+  strategy:
+#    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "artist"
+  template:
+    metadata:
+      labels:
+        app: "artist"
+    spec:
+      containers:
+      - name: "artist"
+        image: "gcr.io/testelmao/artist"
+        ports:
+        - containerPort: 50055
+        resources:
+          requests:
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: artist
+spec:
+  type: ClusterIP
+  selector:
+    app: artist
+  ports:
+  - name: grpc
+    port: 50055
+    targetPort: 50055
+  - name: promui
+    protocol: TCP
+    port: 9090
+    targetPort: 9090 
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "account"
+  labels:
+    app: "account"
+spec:
+  strategy:
+#    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "account"
+  template:
+    metadata:
+      labels:
+        app: "account"
+    spec:
+      serviceAccountName: default
+      containers:
+      - name: "account"
+        image: "gcr.io/testelmao/account"
+        ports:
+        - containerPort: 50052
+        resources:
+          requests:
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account
+spec:
+  type: ClusterIP
+  selector:
+    app: account
+  ports:
+  - name: grpc
+    port: 50052
+    targetPort: 50052
+  - name: promui
+    protocol: TCP
+    port: 9090
+    targetPort: 9090
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "music"
+  labels:
+    app: "music"
+spec:
+  strategy:
+#    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "music"
+  template:
+    metadata:
+      labels:
+        app: "music"
+    spec:
+      serviceAccountName: default
+      containers:
+      - name: "musics"
+        image: "gcr.io/testelmao/musics"
+        ports:
+        - containerPort: 50051
+        resources:
+          requests:
+            cpu: "100m"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "musics-service"
+  namespace: "default"
+  labels:
+    app: "music"
+spec:
+  ports:
+  - name: grpc 
+    protocol: "TCP"
+    port: 50051
+    targetPort: 50051
+  - name: promui
+    protocol: TCP
+    port: 9090
+    targetPort: 9090
+  selector:
+    app: "music"
+  type: "LoadBalancer"
+---
+apiVersion: "autoscaling/v2beta2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "artist-hpa"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "artist"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+---
+apiVersion: "autoscaling/v2beta2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "musics-hpa"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "musics"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+---
+apiVersion: "autoscaling/v2beta2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "account-hpa"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "account"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "api-gateway"
+  namespace: "default"
+  labels:
+    app: "api-gateway"
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "api-gateway"
+  template:
+    metadata:
+      labels:
+        app: "api-gateway"
+    spec:
+      containers:
+      - name: "api-gateway"
+        image: "gcr.io/testelmao/api-gateway"
+        readinessProbe:
+          initialDelaySeconds: 10
+
+          httpGet:
+            path: "/health"
+            port: 80
+        livenessProbe:
+          initialDelaySeconds: 10
+
+          httpGet:
+            path: "/health"
+            port: 80
+---
+apiVersion: "autoscaling/v2beta2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "api-gateway-hpa-fphq"
+  namespace: "default"
+  labels:
+    app: "api-gateway"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "api-gateway"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+---
+apiVersion: "v1"
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: api-gateway
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+spec:
+  defaultBackend:
+    service:
+      name: api-gateway
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - path: /api/ui
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 80
+
+

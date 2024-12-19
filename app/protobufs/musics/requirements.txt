@@ -1,0 +1,12 @@
+python_dateutil == 2.6.0
+setuptools >= 21.0.0
+pymongo[srv] >= 4.0
+pyopenssl
+flask
+prometheus_client
+dataclasses
+
+grpc-interceptor >= 0.13.0
+grpcio-tools >= 1.30
+dnspython >= 2.1.0
+grpcio >= 1.46.0

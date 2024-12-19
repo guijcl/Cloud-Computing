@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+enum ChartType {
+	top200 = 0;
+	viral50 = 1;
+	both = 2;
+}
+
+enum TrendType {
+	SAME_POSITION = 0;
+	MOVE_UP = 1;
+	MOVE_DOWN = 2;
+}
+
+message MusicResponse {
+	string music_id = 1;
+	string type = 2;
+	string name = 3;
+	int32 streams = 4;
+}
+
+//search a music by ID
+message GetMusicRequest {
+	string name = 1;
+}
+
+message MusicListResponse {
+	repeated MusicResponse music = 1;
+}
+
+//search a music by date and trend
+message GetTrendingMusicsRequest {
+	string date = 1;
+	string trend = 2;
+}
+
+//search a music by date and trend and country
+message GetTrendingMusicsByCountryRequest {
+	string date = 1;
+	string trend = 2;
+	string country = 3;
+}
+
+//search a music by top200
+message GetTop200MusicsRequest {
+	string date = 1;
+}
+
+//search musics by top200 and country
+message GetTop200MusicsByCountryRequest {
+	string date = 1;
+	string country = 2;
+}
+
+//search a music by top200
+message GetViral50MusicsRequest {
+	string date = 1;
+}
+
+//search musics by top200 and country
+message GetViral50MusicsByCountryRequest {
+	string date = 1;
+	string country = 2;
+}
+
+//returns the most played music in date
+message GetMostStreamedMusicsRequest {
+	string date = 1;
+	int32 maxResults = 2;
+}
+
+service Musics {
+	rpc GetMusic (GetMusicRequest) returns (MusicResponse);
+	rpc GetTrendingMusics (GetTrendingMusicsRequest) returns (MusicListResponse);
+	rpc GetTrendingMusicsByCountry (GetTrendingMusicsByCountryRequest) returns (MusicListResponse);
+	rpc GetTop200Musics (GetTop200MusicsRequest) returns (MusicListResponse);
+	rpc GetTop200MusicsByCountry (GetTop200MusicsByCountryRequest) returns (MusicListResponse);
+	rpc GetViral50Musics(GetViral50MusicsRequest) returns (MusicListResponse);
+	rpc GetViral50MusicsByCountry (GetViral50MusicsByCountryRequest) returns (MusicListResponse);
+	rpc GetMostStreamedMusics (GetMostStreamedMusicsRequest) returns (MusicListResponse);
+
+}
+

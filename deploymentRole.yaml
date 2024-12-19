@@ -1,0 +1,53 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: app-manager-role-default
+  namespace: default
+rules:
+- apiGroups: ["", "apps", "batch", "autoscaling"  ] # "" indicates the core API group
+  resources: ["services", "pods", "deployments", "replicationcontrollers", "cronjobs", "jobs", "daemonsets", "replicasets", "statefulsets", "horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: app-manager-role-production
+  namespace: production
+rules:
+- apiGroups: ["", "apps", "batch", "autoscaling"  ] # "" indicates the core API group
+  resources: ["services", "pods", "deployments", "replicationcontrollers", "cronjobs", "jobs", "daemonsets", "replicasets", "statefulsets", "horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: role-binding-default
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: app-manager-role-default
+subjects:
+- kind: ServiceAccount
+  name: jenkins-sa
+  namespace: default
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: role-binding-production
+  namespace: production
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: app-manager-role-production
+subjects:
+- kind: ServiceAccount
+  name: jenkins-sa
+  namespace: default

@@ -1,0 +1,613 @@
+swagger: "2.0"
+info:
+  title: Top Musics Discovery
+  description: |
+    Listen to the most streamed and viral music 
+  version: 1.0.0
+basePath: /TopMusicsDiscovery.com
+tags:
+- name: Music
+  description: A place to see all the msuics and artist in top200 since 2017
+- name: User
+  description: Operations about user
+- name : Admin
+  description: Operations about admin
+schemes:
+- https
+- http
+paths:
+  
+  /getMusic{musicId}:
+    get:
+      tags:
+      - Music
+      summary: Find music by ID
+      description: Returns a single music
+      operationId: api_lib.getMusicById
+      produces:
+      - application/json
+      parameters:
+      - name: musicId
+        in: path
+        description: Id of music to return
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Music found successfully
+          schema:
+            $ref: '#/definitions/Music'
+        "404":
+          description: Music not found
+
+    
+  
+   
+  /getArtist/{artistId}:
+    get:
+      tags:
+      - Artist
+      summary: Returns musics of a certain artist
+      description: Returns list of musics of the artist
+      operationId: api_artist.getArtist
+      produces:
+      - application/json
+      parameters:
+      - name: artistId
+        in: path
+        description: id of an artist
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Artist'
+        "405":
+          description: Invalid input
+          
+             
+  /getArtistsWithLetter/{string}:
+    get:
+      tags:
+      - Artist
+      summary: Returns list of artists that start with string
+      description: Returns list of artists that start with string
+      operationId: api_artist.getArtistsWithLetter
+      produces:
+      - application/json
+      parameters:
+      - name: string
+        in: path
+        description: string of artists
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Artist'
+        "405":
+          description: Invalid input
+          
+          
+   
+  /getTop20Artist/{date}:
+    get:
+      tags:
+      - Artist
+      summary: Returns top20 artist
+      description: Returns top20 artist with the most music on top200 in a certain date
+      operationId: api_artist.getTop20Artist
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of top20 Global
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Artist'
+        "405":
+          description: Invalid input 
+   
+  
+  /getViral10Artist/{date}:
+    get:
+      tags:
+      - Artist
+      summary: Returns Viral 10 global of a certain date
+      description: Returns Viral 10 global of a certain date
+      operationId: api_artist.getViral10Artist
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of Viral10 
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Artist'
+        "405":
+          description: Invalid input  
+          
+  
+  /getTrendingMusic/{date}/{trendType}:
+    get:
+      tags:
+      - Music
+      summary: Returns musics of a certain trend
+      description: Returns list of music of a certain trend
+      operationId: api_lib.getTrendingMusic
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of search
+        required: true
+        type: string
+      - name: trendType
+        in: path
+        description: trend type e.g - move_up / move_down / same_position
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+          
+  /getTrendingMusicByCountry/{date}/{trendType}/{country}:
+    get:
+      tags:
+      - Music
+      summary: Returns musics of a certain trendin a country
+      description: Returns list of music of a certain trend in a country
+      operationId: api_lib.getTrendingMusicByCountry
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of search
+        required: true
+        type: string
+      - name: trendType
+        in: path
+        description: trend type e.g - move_up / move_down / same_position
+        required: true
+        type: string
+      - name: country
+        in: path
+        description: chosen country
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+          
+  
+  /getTop200/{date}:
+    get:
+      tags:
+      - Music
+      summary: Returns Top 200 global of a certain date
+      description: Returns list of the top 200 music
+      operationId: api_lib.getTop200
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of top200 Global
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+    
+  /getTop200Country/{date}/{country}:
+    get:
+      tags:
+      - Music
+      summary: Returns Top 200 of a certain date in a specific country
+      description: Returns list of the top 200 music
+      operationId: api_lib.getTop200Country
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of top200 Global
+        required: true
+        type: string
+      - name: country
+        in: path
+        description: country of top200
+        required: true
+        type: string
+        
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+          
+          
+  /getViral50/{date}:
+    get:
+      tags:
+      - Music
+      summary: Returns Viral 50 global of a certain date
+      description: Returns list of the top 50 music
+      operationId: api_lib.getViral50
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of Viral50 Global
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+    
+  /getViral50Country/{date}/{country}:
+    get:
+      tags:
+      - Music
+      summary: Returns viral 50 of a certain date in a specific country
+      description: Returns list of the top 50 music
+      operationId: api_lib.getViral50Country
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: path
+        description: date of Viral50 
+        required: true
+        type: string
+      - name: country
+        in: path
+        description: country of Viral 50
+        required: true
+        type: string
+        
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+          
+  /getMostStreamedMusics/{nMusic}/{date}:
+    get:
+      tags:
+      - Music
+      summary: Returns viral 50 of a certain date in a specific country
+      description: Returns list of the nMusics most streamed musics at a certain date
+      operationId: api_lib.getMostStreamedMusics
+      produces:
+      - application/json
+      parameters:
+      - name: nMusic
+        in: path
+        description: number of musics
+        required: true
+        type: string
+      - name: date
+        in: path
+        description: date 
+        required: true
+        type: string
+        
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MusicName'
+        "405":
+          description: Invalid input
+  
+  /user/music/{musicId}/like:
+    put:
+      tags:
+      - User
+      summary: Mark music with like
+      description: Mark music with like
+      operationId: api_lib.updateMusicLike
+      parameters:
+      - name: musicId
+        in: path
+        description: Id of music to update
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Like successfully done
+        "404":
+          description: Music not found
+          
+    delete:
+      tags:
+        - User
+      summary: Mark a music as not liked
+      description: Mark a music as not liked
+      parameters:
+        - name: musicId
+          in: path
+          description: Id of music to update
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Dislike successfully done
+        "404":
+          description: Music not found
+          
+  /user/music/{musicId}/listenLater:
+    put:
+      tags:
+      - User
+      summary: Mark music to listen later
+      description: Mark music to listen later
+      operationId: api_lib.updateMusicListenLater
+      parameters:
+      - name: musicId
+        in: path
+        description: Id of music to update
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Operation successfully done
+        "404":
+          description: Music not found
+          
+    delete:
+      tags:
+        - User
+      summary: Mark a music as already listened
+      description: Mark a music as already listened
+      parameters:
+        - name: musicId
+          in: path
+          description: Id of music to update
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Operation successfully done
+        "404":
+          description: Music not found
+   
+   
+  /user:
+    post:
+      tags:
+      - User
+      summary: Create/Update user
+      description: Updates user, if it doesn't exist, creates a new one
+      operationId: api_users.updateUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Created user object
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid user supplied
+          
+          
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: api_users.deleteUser
+      produces:
+        - application/json
+      responses:
+        "404":
+          description: User not found
+          
+          
+  /user/login:
+    get:
+      tags:
+      - User
+      summary: Logs user into the system
+      operationId: api_users.loginUser
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            type: string
+        "400":
+          description: Invalid username/password supplied
+          
+          
+  /user/logout:
+    get:
+      tags:
+      - User
+      summary: Logs out current logged in user session
+      operationId: api_users.logoutUser
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: successful operation
+          
+  /user/search/{username}:
+    get:
+      tags:
+      - User
+      summary: Get user by username
+      operationId: api_users.getUserByName
+      produces:
+      - application/json
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be fetched.
+        required: true
+        type: string
+      responses:
+        "200":
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: User not found
+          
+  /admin/getUsers:
+    get:
+      tags:
+      - Admin
+      summary: Get all registered users
+      description: Return a list of all users
+      operationId: api_admin.getUsers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: successful operation
+        "204":
+          description: there is no users 
+
+
+definitions:
+
+  Type:
+    type: string
+    enum:
+    - TOP200
+    - VIRAL50
+    - BOTH
+
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      likes:
+        type: array
+        items:
+          $ref: '#/definitions/MusicName'
+          description: Like ids
+      dislikes:
+        type: array
+        items:
+          $ref: '#/definitions/MusicName'
+          description: dislike ids
+      listenlater:
+        type: array
+        items:
+          $ref: '#/definitions/MusicName'
+          description: ids to listen later
+ 
+
+  MusicName:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      
+
+  Artist:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string  
+
+  Music:
+    type: object
+    required:
+    - id
+    - type
+    - name
+    properties:
+      id:
+        type: string
+      artista:
+        type: string
+      totalstreams:
+        type: number
+      chart:
+        type: array
+        items:
+          $ref: '#/definitions/Type'
+        
+
+
+

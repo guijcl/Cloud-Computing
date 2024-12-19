@@ -1,0 +1,2 @@
+kubectl delete cm prometheus-cm
+kubectl delete svc,deploy --all

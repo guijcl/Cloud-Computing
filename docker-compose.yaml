@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  music:
+      build:
+          dockerfile: Dockerfile
+          context: ./app/protobufs/musics
+      image: musics
+      networks:
+        - local
+      ports:
+          - 50051:50051
+  account:
+      build:
+          dockerfile: Dockerfile
+          context: ./app/protobufs/account
+      image: account
+      networks:
+        - local
+      ports:
+          - 50052:50052
+  artist:
+      build:
+          dockerfile: Dockerfile
+          context: ./app/protobufs/artist
+      image: artist
+      networks:
+        - local
+      ports:
+          - 50055:50055
+
+  mongodb:
+    image: mongo:4.0
+    container_name: mongodb_test_CN #nome do container que irá ser criado
+    networks:
+      - local
+    ports:
+      - 27017:27017
+#    volumes:
+#      - ../database/mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=mongodb_cloud
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    restart: unless-stopped
+
+networks:
+    local:
+      driver: bridge 

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+message AccountMusicResponse {
+	string name = 1;
+}
+
+message AccountMusicListResponse {
+	repeated AccountMusicResponse music = 1;
+}
+
+message GetMusicRequestAccount {
+	string username =1;
+	string musicname = 2;
+}
+
+message Success {
+	bool success = 1;
+}
+
+message UserResponse {
+    string username = 1;
+    AccountMusicListResponse listenLater= 2;
+    AccountMusicListResponse likes= 3;
+}
+
+message UserRequest {
+	string username = 1;
+}
+
+message UpdateUserRequest {
+	string username = 1;
+}
+
+message CreateUserRequest {
+	string username = 1;
+}
+
+message DeleteUserRequest {
+	string username = 1;
+}
+
+message MusicIdRequest{
+    int32 id = 1;
+}
+
+
+service Account{
+
+    rpc GetUserByName (UserRequest) returns (UserResponse);
+    rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+    rpc CreateUser (CreateUserRequest) returns (Success);
+    rpc DeleteUser (DeleteUserRequest) returns (Success);
+    
+    
+    rpc LoginUser (UserRequest) returns (Success);
+	rpc LogoutUser (UserRequest) returns (Success);
+
+    rpc ListenLater(GetMusicRequestAccount) returns (Success);
+	rpc GetListenLaterMusics(UserRequest) returns (AccountMusicListResponse);
+
+	rpc Like(GetMusicRequestAccount) returns (Success);
+	rpc GetLikes(UserRequest) returns (AccountMusicListResponse);
+
+}
+  
