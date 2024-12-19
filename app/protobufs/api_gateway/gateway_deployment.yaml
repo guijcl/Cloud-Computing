@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: "api-gateway"
-        image: "gcr.io/jenkinstest-351122/api-gateway"
+        image:
         readinessProbe:
           initialDelaySeconds: 10
 
