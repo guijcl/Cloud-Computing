@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: "musics"
-        image: "gcr.io/jenkinstest-351122/musics"
+        image: "gcr.io/${PROJECT_ID}/musics"
         ports:
         - containerPort: 50051
         resources:
@@ -64,7 +64,7 @@ spec:
   selector:
     app: "music"
   type: "LoadBalancer"
----  
+---
 
 apiVersion: "apps/v1"
 kind: "Deployment"
@@ -90,7 +90,7 @@ spec:
     spec:
       containers:
       - name: "artist"
-        image: "gcr.io/jenkinstest-351122/artist"
+        image: "gcr.io/${PROJECT_ID}/artist"
         ports:
         - containerPort: 50055
         resources:
@@ -155,7 +155,7 @@ spec:
     spec:
       containers:
       - name: "account"
-        image: "gcr.io/jenkinstest-351122/account"
+        image: "gcr.io/${PROJECT_ID}/account"
         ports:
         - containerPort: 50052
         resources:
@@ -283,7 +283,7 @@ spec:
     spec:
       containers:
       - name: "api-gateway"
-        image: "gcr.io/jenkinstest-351122/api-gateway"
+        image: "gcr.io/${PROJECT_ID}/api-gateway"
         readinessProbe:
           initialDelaySeconds: 10
           httpGet:
@@ -356,4 +356,4 @@ spec:
             name: api-gateway
             port:
               number: 80
-    
+

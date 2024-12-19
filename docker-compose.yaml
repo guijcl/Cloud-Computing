@@ -39,11 +39,11 @@ services:
 #    volumes:
 #      - ../database/mongodb
     environment:
-      - MONGO_INITDB_DATABASE=mongodb_cloud
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     restart: unless-stopped
 
 networks:
     local:
-      driver: bridge 
+      driver: bridge

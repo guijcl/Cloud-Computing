@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: mongodb-username
 data:
-  username: root
+  username: ${BASE64_USERNAME}
 ---
 #Secret to be used to access the database
 apiVersion: v1
@@ -12,7 +12,7 @@ kind: Secret
 metadata:
   name: mongodb-password
 data:
-  password: cm9vdA==
+  password: ${BASE64_PASSWORD}
 type: Opaque
 ---
 #Creation of the Persistent Volume
